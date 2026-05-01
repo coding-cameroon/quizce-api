@@ -1,0 +1,41 @@
+{
+  "name": "quizce-api",
+  "module": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "db:push": "drizzle-kit push",
+    "start": "bun run src/index.js",
+    "db:studio": "drizzle-kit studio",
+    "db:migrate": "drizzle-kit migrate",
+    "db:generate": "drizzle-kit generate",
+    "dev": "bun --watch run src/index.ts",
+    "build": "bun build src/index.ts --outdir ./dist --target=node"
+  },
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/express": "^5.0.6",
+    "@types/pg": "^8.20.0",
+    "drizzle-kit": "^0.31.10",
+    "tsx": "^4.21.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
+    "@types/cors": "^2.8.19",
+    "@types/multer": "^2.1.0",
+    "@types/node": "^25.6.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "drizzle-orm": "^0.45.2",
+    "express": "^5.2.1",
+    "imagekit": "^6.0.0",
+    "multer": "^2.1.1",
+    "pg": "^8.20.0",
+    "postgres": "^3.4.9",
+    "uuid": "^14.0.0",
+    "winston": "^3.19.0"
+  }
+}

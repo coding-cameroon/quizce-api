@@ -1,0 +1,10 @@
+{"error":{"code":"28P01","file":"auth.c","name":"PostgresError","routine":"auth_failed","severity":"FATAL","severity_local":"FATAL"},"level":"error","message":"DB connection failed","timestamp":"2026-05-01T08:25:15.611Z"}
+{"error":{"code":"28P01","file":"auth.c","name":"PostgresError","routine":"auth_failed","severity":"FATAL","severity_local":"FATAL"},"level":"error","message":"DB connection failed","timestamp":"2026-05-01T08:26:55.037Z"}
+{"level":"info","message":"PostgreSQL connected successfully","timestamp":"2026-05-01T08:27:55.498Z"}
+{"level":"info","message":"PostgreSQL connected successfully","timestamp":"2026-05-01T08:38:08.675Z"}
+{"level":"info","message":"PostgreSQL connected successfully","timestamp":"2026-05-01T08:39:30.943Z"}
+{"level":"info","message":"PostgreSQL connected successfully","timestamp":"2026-05-01T08:40:36.794Z"}
+{"level":"info","message":"PostgreSQL connected successfully","timestamp":"2026-05-01T08:44:34.642Z"}
+{"error":{"code":"3D000","file":"postinit.c","name":"PostgresError","routine":"InitPostgres","severity":"FATAL","severity_local":"FATAL"},"level":"error","message":"DB connection failed","timestamp":"2026-05-01T11:54:45.444Z"}
+{"error":{"code":"3D000","file":"postinit.c","name":"PostgresError","routine":"InitPostgres","severity":"FATAL","severity_local":"FATAL"},"level":"error","message":"DB connection failed","timestamp":"2026-05-01T11:54:57.485Z"}
+{"error":{"code":"3D000","file":"postinit.c","name":"PostgresError","routine":"InitPostgres","severity":"FATAL","severity_local":"FATAL"},"level":"error","message":"DB connection failed","timestamp":"2026-05-01T11:55:13.789Z"}

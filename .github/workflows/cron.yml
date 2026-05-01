@@ -13,4 +13,4 @@ jobs:
             - name: Ping the API
               run: |
                   echo "Pinging server..."
-                  curl -f https://your-app-name.onrender.com/api/v1/health || exit 1
+                  curl -f https://brainwaves-quizce.onrender.com/api/v1/health || exit 1

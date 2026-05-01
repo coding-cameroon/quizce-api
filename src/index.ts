@@ -32,7 +32,7 @@ app.use(express.json());
 app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/api/v1", (_: Request, res: Response) => {
+app.get("/api/v1/health", (_: Request, res: Response) => {
   return res.status(200).json({
     success: true,
     statusCode: 200,

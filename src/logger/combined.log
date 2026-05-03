@@ -12,3 +12,7 @@
 {"level":"info","message":"Server running on http://localhost:5001/api/v1","timestamp":"2026-05-01T12:03:03.181Z"}
 {"level":"info","message":"PostgreSQL connected successfully","timestamp":"2026-05-01T13:27:40.131Z"}
 {"level":"info","message":"Server running on http://localhost:5001/api/v1","timestamp":"2026-05-01T13:27:40.399Z"}
+{"level":"info","message":"PostgreSQL connected successfully","timestamp":"2026-05-03T21:23:25.993Z"}
+{"level":"info","message":"Server running on http://localhost:5001/api/v1","timestamp":"2026-05-03T21:23:26.089Z"}
+{"level":"info","message":"PostgreSQL connected successfully","timestamp":"2026-05-03T21:30:49.661Z"}
+{"level":"info","message":"Server running on http://localhost:5001/api/v1","timestamp":"2026-05-03T21:30:50.472Z"}

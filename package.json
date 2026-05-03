@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "db:push": "drizzle-kit push",
-    "start": "bun run src/index.js",
+    "start": "bun run src/index.ts",
     "db:studio": "drizzle-kit studio",
     "db:migrate": "drizzle-kit migrate",
     "db:generate": "drizzle-kit generate",

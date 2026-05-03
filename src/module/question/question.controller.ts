@@ -6,9 +6,11 @@ import {
   BadRequestError,
   NotFoundError,
   InternalError,
+  ForbiddenError,
 } from "@/errors/AppError.js";
 import { successResponse } from "@/utils/responses.js";
 import type { NewQuestion, Question } from "@/db/schema/question.schema.js";
+import { generateJSON } from "@/utils/generateJSON.js";
 
 interface QuestionInput {
   yearId: string;
@@ -225,6 +227,38 @@ class QuestionController {
         200,
         deleted,
         `${deleted.length} questions deleted successfully.`,
+      );
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async generateJSON(req: Request, res: Response, next: NextFunction) {
+    try {
+      const pdf = req.file;
+      const { yearId } = req.params;
+
+      if (!pdf)
+        throw new BadRequestError("Provide a PDF file to generate questions.");
+      if (!yearId) throw new BadRequestError("Provide a year ID.");
+
+      const year = await yearServices.getYearById(yearId as string);
+      if (!year) throw new NotFoundError(`Year not found with ID: ${yearId}.`);
+
+      const questions = await generateJSON({
+        path: pdf.path,
+        mimeType: pdf.mimetype,
+      });
+      if (!questions || !questions.length)
+        throw new InternalError("Could not generate questions from PDF.");
+
+      const finalQuestions = questions.map((q: any) => ({ ...q, yearId }));
+
+      return successResponse(
+        res,
+        200,
+        finalQuestions,
+        "Questions generated successfully.",
       );
     } catch (error) {
       next(error);

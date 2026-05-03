@@ -1,7 +1,15 @@
 import { Router } from "express";
+
+import upload from "@/config/multer.js";
 import { questionController } from "./question.controller.js";
 
 const router = Router();
+
+router.post(
+  "/:yearId/parse-pdf",
+  upload.single("pdf"),
+  questionController.generateJSON,
+);
 
 router.get("/", questionController.getAllQuestions);
 router.post("/new", questionController.createQuestion);

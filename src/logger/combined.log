@@ -10,3 +10,5 @@
 {"error":{"code":"3D000","file":"postinit.c","name":"PostgresError","routine":"InitPostgres","severity":"FATAL","severity_local":"FATAL"},"level":"error","message":"DB connection failed","timestamp":"2026-05-01T11:55:13.789Z"}
 {"level":"info","message":"PostgreSQL connected successfully","timestamp":"2026-05-01T12:03:03.089Z"}
 {"level":"info","message":"Server running on http://localhost:5001/api/v1","timestamp":"2026-05-01T12:03:03.181Z"}
+{"level":"info","message":"PostgreSQL connected successfully","timestamp":"2026-05-01T13:27:40.131Z"}
+{"level":"info","message":"Server running on http://localhost:5001/api/v1","timestamp":"2026-05-01T13:27:40.399Z"}

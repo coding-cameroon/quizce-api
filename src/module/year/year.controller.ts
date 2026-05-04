@@ -33,9 +33,17 @@ class YearController {
       const levelName = subject.faculty?.level?.name;
       const yearLevel = levelName === "Advanced Level" ? "A Level" : "O Level";
 
-      const year = await yearServices.findExistingYears(yearNames, subject.id);
-      if (year)
-        throw new ConflictError("Year(s) already exist. Verify and retry.");
+      const existingYears = await yearServices.findExistingYears(
+        yearNames,
+        subjectId,
+      );
+
+      if (existingYears.length > 0) {
+        const existingNames = existingYears.map((y: any) => y.name).join(", ");
+        throw new ConflictError(
+          `The following year(s) already exist for this subject: ${existingNames}`,
+        );
+      }
 
       const newYears = await yearServices.createYears(
         yearNames,

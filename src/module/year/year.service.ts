@@ -1,6 +1,6 @@
 import { db } from "@/config/db.js";
 import { years, type NewYear, type Year } from "@/db/schema/year.schema.js";
-import { eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 
 class YearServices {
   async createYears(
@@ -56,6 +56,12 @@ class YearServices {
         .where(eq(years.id, id))
         .returning();
       return deleted;
+    });
+  }
+
+  async findExistingYears(names: string[], subjectId: string) {
+    return await db.query.years.findMany({
+      where: and(eq(years.subjectId, subjectId), inArray(years.name, names)),
     });
   }
 }

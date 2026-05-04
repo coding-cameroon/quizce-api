@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "unique_slug_per_faculty" ON "subjects" USING btree ("slug","faculty_id");

@@ -5,6 +5,7 @@ import {
   BadRequestError,
   NotFoundError,
   InternalError,
+  ConflictError,
 } from "@/errors/AppError.js";
 import { successResponse } from "@/utils/responses.js";
 
@@ -31,6 +32,10 @@ class YearController {
 
       const levelName = subject.faculty?.level?.name;
       const yearLevel = levelName === "Advanced Level" ? "A Level" : "O Level";
+
+      const year = await yearServices.findExistingYears(yearNames, subject.id);
+      if (year)
+        throw new ConflictError("Year(s) already exist. Verify and retry.");
 
       const newYears = await yearServices.createYears(
         yearNames,

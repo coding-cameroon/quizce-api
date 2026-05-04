@@ -4,12 +4,13 @@ import { eq } from "drizzle-orm";
 
 class FacultyServices {
   // create faculty
-  async createFaculty(data: NewFaculty): Promise<Faculty> {
+  async createFaculty(data: NewFaculty): Promise<Faculty | undefined> {
     const [faculty] = await db.transaction(async (tx) => {
       return await tx.insert(faculties).values(data).returning();
     });
 
-    return faculty;
+    // return faculty;
+    return await this.getFacultyById(faculty.id);
   }
 
   //   get all faculties
@@ -57,7 +58,11 @@ class FacultyServices {
   // update faculty
   async updateFaculty(id: string, data: Partial<NewFaculty>): Promise<Faculty> {
     const [faculty] = await db.transaction(async (tx) => {
-      return await tx.update(faculties).set(data).returning();
+      return await tx
+        .update(faculties)
+        .set(data)
+        .where(eq(faculties.id, id))
+        .returning();
     });
 
     return faculty;

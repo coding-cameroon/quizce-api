@@ -1,6 +1,6 @@
 import { db } from "@/config/db.js";
 import { NewFaculty, Faculty, faculties } from "@/db/schema/faculty.schema.js";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 class FacultyServices {
   // create faculty
@@ -43,6 +43,20 @@ class FacultyServices {
         level: true,
         subjects: true,
       },
+    });
+  }
+
+  //   check faculty exist
+  async checkfacultyExist({
+    name,
+    levelId,
+  }: {
+    name: "ARTS" | "SCIENCE" | "COMMERCIAL";
+    levelId: string;
+  }): Promise<Faculty | undefined> {
+    return await db.query.faculties.findFirst({
+      where: (faculties, { and, eq }) =>
+        and(eq(faculties.name, name), eq(faculties.levelId, levelId)),
     });
   }
 

@@ -1,5 +1,6 @@
 import {
   BadRequestError,
+  ConflictError,
   InternalError,
   NotFoundError,
 } from "@/errors/AppError.js";
@@ -16,6 +17,13 @@ class FacultyController {
       if (!name) throw new BadRequestError("Provide faculty name.");
       if (!levelId)
         throw new BadRequestError("Provide level ID for the faculty.");
+
+      const faculty = await facultyServices.checkfacultyExist({
+        name,
+        levelId,
+      });
+      if (faculty)
+        throw new ConflictError("faculty already exist in this level.");
 
       const newFaculty = await facultyServices.createFaculty({ name, levelId });
       if (!newFaculty)

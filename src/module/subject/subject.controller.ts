@@ -4,6 +4,7 @@ import {
   BadRequestError,
   NotFoundError,
   InternalError,
+  ConflictError,
 } from "@/errors/AppError.js";
 import { successResponse } from "@/utils/responses.js";
 import { facultyServices } from "../faculty/faculty.service.js";
@@ -18,6 +19,13 @@ class SubjectController {
       const faculty = await facultyServices.getFacultyById(facultyId);
       if (!faculty)
         throw new BadRequestError("Can't create subject of a ghost faculty.");
+
+      const subject = await subjectServices.checkSubjectExists(
+        name,
+        faculty.id,
+      );
+      if (subject)
+        throw new ConflictError("Subject already exist in this faculty.");
 
       const newSubject = await subjectServices.createSubject({
         name,

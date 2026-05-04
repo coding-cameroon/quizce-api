@@ -59,6 +59,13 @@ class SubjectServices {
       return deleted;
     });
   }
+
+  async checkSubjectExists(name: string, facultyId: string) {
+    return await db.query.subjects.findFirst({
+      where: (subjects, { and, eq }) =>
+        and(eq(subjects.name, name), eq(subjects.facultyId, facultyId)),
+    });
+  }
 }
 
 export const subjectServices = new SubjectServices();

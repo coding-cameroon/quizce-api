@@ -25,7 +25,7 @@ const corsOptions: CorsOptions = {
   origin: "*",
   credentials: true,
   allowedHeaders: ["Content-Type"],
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
 };
 
 app.use(express.json());

@@ -30,8 +30,8 @@ class SubjectServices {
     });
   }
 
-  async getSubjectByFacultyId(id: string) {
-    return await db.query.subjects.findFirst({
+  async getSubjectsByFacultyId(id: string) {
+    return await db.query.subjects.findMany({
       where: eq(subjects.facultyId, id),
       with: { faculty: { with: { level: true } } },
     });

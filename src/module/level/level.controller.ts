@@ -1,5 +1,6 @@
 import {
   BadRequestError,
+  ConflictError,
   InternalError,
   NotFoundError,
 } from "@/errors/AppError.js";
@@ -14,6 +15,10 @@ class LevelController {
 
       if (!name) throw new BadRequestError("Provide level name to continue.");
       if (!slug) throw new BadRequestError("Provide level slug to continue.");
+
+      const level = await levelServices.getLevelBySlug(slug);
+      if (level)
+        throw new ConflictError(`Level already exist with name: ${name}`);
 
       const newLevel = await levelServices.createLevel({ name, slug });
       if (!newLevel)

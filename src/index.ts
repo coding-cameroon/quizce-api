@@ -41,12 +41,12 @@ app.get("/api/v1/health", (_: Request, res: Response) => {
 });
 
 // routes
-app.use("/ap1/v1/years", yearRouter);
-app.use("/ap1/v1/images", imageRouter);
-app.use("/ap1/v1/levels", levelRouter);
-app.use("/ap1/v1/subjects", subjectRouter);
-app.use("/ap1/v1/faculties", facultyRouter);
-app.use("/ap1/v1/questions", questionRouter);
+app.use("/api/v1/years", yearRouter);
+app.use("/api/v1/images", imageRouter);
+app.use("/api/v1/levels", levelRouter);
+app.use("/api/v1/subjects", subjectRouter);
+app.use("/api/v1/faculties", facultyRouter);
+app.use("/api/v1/questions", questionRouter);
 
 // error middleware
 app.use(globalErrorHandler);

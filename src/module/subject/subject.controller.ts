@@ -76,15 +76,13 @@ class SubjectController {
     try {
       const { facultyId } = req.params;
       if (!facultyId)
-        throw new BadRequestError("Provide subject id to continue.");
+        throw new BadRequestError("Provide faculty id to continue.");
 
-      const subject = await subjectServices.getSubjectByFacultyId(
+      const subjects = await subjectServices.getSubjectsByFacultyId(
         facultyId as string,
       );
-      if (!subject)
-        throw new InternalError("Failed to get subject by faculty.");
 
-      return successResponse(res, 200, subject, "Subject retrieved");
+      return successResponse(res, 200, subjects, "Subjects retrieved");
     } catch (error) {
       next(error);
     }

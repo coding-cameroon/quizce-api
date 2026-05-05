@@ -167,7 +167,7 @@ class ImageController {
         throw new NotFoundError(`Question not found with ID: ${questionId}.`);
 
       const existingImages = await imageServices.getImagesByQuestionId(
-        questionId as string,
+        question.id,
       );
 
       if (existingImages.length > 0) {
@@ -178,9 +178,7 @@ class ImageController {
         await imageServices.deleteMultipleImagesFromCloud(fileIds);
       }
 
-      const deleted = await imageServices.deleteImagesByQuestionId(
-        questionId as string,
-      );
+      const deleted = await imageServices.deleteImagesByQuestionId(question.id);
       if (!deleted) throw new InternalError("Failed to delete images.");
 
       return successResponse(

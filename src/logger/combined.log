@@ -28,3 +28,8 @@
 {"level":"info","message":"PostgreSQL connected successfully","timestamp":"2026-05-05T00:28:25.775Z"}
 {"level":"info","message":"Server running on http://localhost:5001/api/v1","timestamp":"2026-05-05T00:28:25.998Z"}
 {"level":"info","message":"Gemini API Key present:","timestamp":"2026-05-05T00:28:26.007Z"}
+{"level":"info","message":"PostgreSQL connected successfully","timestamp":"2026-05-05T00:35:12.703Z"}
+{"level":"info","message":"Server running on http://localhost:5001/api/v1","timestamp":"2026-05-05T00:35:12.819Z"}
+{"level":"info","message":"Gemini API Key present:","timestamp":"2026-05-05T00:35:12.822Z"}
+{"level":"info","message":"GENERATE PDF STARTED...","timestamp":"2026-05-05T00:37:42.365Z"}
+{"level":"info","message":"GENERATE PDF STARTED...","timestamp":"2026-05-05T00:43:42.140Z"}

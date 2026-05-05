@@ -8,13 +8,17 @@ import { InternalError } from "@/errors/AppError";
 const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
 export const generateJSON = async function (file: {
-  path: string;
+  buffer: Buffer;
   mimeType: string;
 }) {
   logger.info("GENERATE PDF STARTED...");
 
+  const blob = new Blob([file.buffer as any], {
+    type: file.mimeType,
+  });
+
   const myfile = await ai.files.upload({
-    file: file.path,
+    file: blob,
     config: { mimeType: file.mimeType },
   });
 

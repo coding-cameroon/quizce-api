@@ -246,7 +246,7 @@ class QuestionController {
       if (!year) throw new NotFoundError(`Year not found with ID: ${yearId}.`);
 
       const questions = await generateJSON({
-        path: pdf.path,
+        buffer: pdf.buffer,
         mimeType: pdf.mimetype,
       });
       if (!questions || !questions.length)

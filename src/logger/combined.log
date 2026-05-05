@@ -16,3 +16,15 @@
 {"level":"info","message":"Server running on http://localhost:5001/api/v1","timestamp":"2026-05-03T21:23:26.089Z"}
 {"level":"info","message":"PostgreSQL connected successfully","timestamp":"2026-05-03T21:30:49.661Z"}
 {"level":"info","message":"Server running on http://localhost:5001/api/v1","timestamp":"2026-05-03T21:30:50.472Z"}
+{"level":"info","message":"PostgreSQL connected successfully","timestamp":"2026-05-05T00:26:59.566Z"}
+{"level":"info","message":"Server running on http://localhost:5001/api/v1","timestamp":"2026-05-05T00:26:59.675Z"}
+{"level":"info","message":"Gemini API Key present:","timestamp":"2026-05-05T00:26:59.676Z"}
+{"level":"info","message":"PostgreSQL connected successfully","timestamp":"2026-05-05T00:27:16.498Z"}
+{"level":"info","message":"Server running on http://localhost:5001/api/v1","timestamp":"2026-05-05T00:27:16.578Z"}
+{"level":"info","message":"Gemini API Key present:","timestamp":"2026-05-05T00:27:16.581Z"}
+{"level":"info","message":"PostgreSQL connected successfully","timestamp":"2026-05-05T00:28:00.529Z"}
+{"level":"info","message":"Server running on http://localhost:5001/api/v1","timestamp":"2026-05-05T00:28:00.613Z"}
+{"level":"info","message":"Gemini API Key present: AIzaSyArlVn3ifIDWv8GcV029PbG9vm-RsRFgDw","timestamp":"2026-05-05T00:28:00.614Z"}
+{"level":"info","message":"PostgreSQL connected successfully","timestamp":"2026-05-05T00:28:25.775Z"}
+{"level":"info","message":"Server running on http://localhost:5001/api/v1","timestamp":"2026-05-05T00:28:25.998Z"}
+{"level":"info","message":"Gemini API Key present:","timestamp":"2026-05-05T00:28:26.007Z"}

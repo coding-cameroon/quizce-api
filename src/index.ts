@@ -6,7 +6,7 @@ import type { Request, Response, Application } from "express";
 
 // CONFIGS
 import { connectDB } from "./config/db.js";
-import { PORT } from "./config/env.js";
+import { GEMINI_API_KEY, PORT } from "./config/env.js";
 
 // ROUTES
 import { yearRouter } from "./module/year/year.route.js";
@@ -56,6 +56,7 @@ const startServer = async () => {
     await connectDB();
     app.listen(PORT || 5500, () => {
       logger.info(`Server running on http://localhost:${PORT}/api/v1`);
+      logger.info("Gemini API Key present:", !!GEMINI_API_KEY);
     });
   } catch (error) {
     logger.error("[SERVER] Failed to start server");

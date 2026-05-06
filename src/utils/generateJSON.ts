@@ -38,30 +38,61 @@ Each object in the array must strictly follow this structure:
 }
 
 ### MATHEMATICAL RENDERING (LaTeX):
-1. **Strict LaTeX**: Use LaTeX for ALL mathematical expressions, symbols, and equations.
-2. **Double-Escape Requirement**: Because the output is a JSON string, you MUST use double backslashes for all LaTeX commands (e.g., use \\\\frac{a}{b}, \\\\sqrt{x}, \\\\sum, \\\\int). A single backslash will make the JSON invalid and cause rendering errors.
-3. **Delimiters**: 
-   - Use $ for inline math (e.g., $x^2 + 1$).
-   - Use $$ for block/display math (e.g., $$\\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$$).
+1. Use LaTeX for ALL mathematical expressions, symbols, and equations.
+2. In JSON strings, use double backslashes for ALL LaTeX commands so they are valid JSON strings (e.g., use "\\\\frac" so that after JSON.parse it becomes "\\frac" which KaTeX can render).
+3. Inline math: wrap in single dollar signs e.g. $x^2 + 1$.
+4. Block math: wrap in double dollar signs e.g. $$\\\\frac{-b \\\\pm \\\\sqrt{b^2 - 4ac}}{2a}$$.
+5. Examples of correct escaping:
+   - Fraction: $$\\\\frac{1}{x}$$
+   - Square root: $\\\\sqrt{x}$
+   - Integral: $$\\\\int_{1}^{2} \\\\frac{1}{x} dx$$
+   - Log: $\\\\log_{x} y$
+   - Greek letters: $\\\\alpha$, $\\\\beta$, $\\\\theta$, $\\\\pi$, $\\\\lambda$, $\\\\mu$
+   - Trig: $\\\\sin \\\\theta$, $\\\\cos \\\\theta$, $\\\\tan \\\\theta$
+   - Sets: $A \\\\cap B$, $A \\\\cup B$, $\\\\mathbb{R}$
+   - Arrows: $\\\\rightarrow$, $\\\\Rightarrow$, $\\\\to$, $\\\\infty$
+   - Vectors: $\\\\mathbf{i}$, $\\\\mathbf{j}$, $\\\\mathbf{k}$
+   - Matrix: $$\\\\begin{pmatrix} a & b \\\\\\\\ c & d \\\\end{pmatrix}$$
+   - Limit: $\\\\lim_{x \\\\to 0}$
+   - Sum: $\\\\sum_{i=1}^{n}$
+   - Absolute value: $\\\\left| x \\\\right|$
 
 ### EXTRACTION RULES:
 1. Extract ONLY the first 50 multiple-choice questions. Ignore structural/essay questions entirely.
-2. **Options**: Must be plain text strings ONLY. Remove any "A.", "B.", "C.", or "D." prefixes from the option text.
-3. **correctOption**: A string representing the zero-based index of the correct answer ("0" for A, "1" for B, "2" for C, "3" for D).
-4. **imageType**: Must be "none" or "question_image" only.
-5. **explanation**: Must be detailed. For math problems, show the full step-by-step derivation using properly escaped LaTeX (double backslashes).
-6. **yearId**: Must always be an empty string "".
-7. **Format**: Return ONLY the raw JSON array. NO markdown (no \`\`\`json tags), NO preamble, and NO conversational text.
+2. Options must always be plain text strings. Remove any "A.", "B.", "C.", or "D." prefixes. Apply the same LaTeX escaping rules if options contain math.
+3. correctOption is the zero-based index of the correct answer as a string ("0" for A, "1" for B, "2" for C, "3" for D). If not determinable, use "".
+4. imageType is ONLY "none" or "question_image". Use "question_image" if the question references a diagram, figure, table or graph.
+5. explanation must be detailed with full step-by-step working. For math problems show the full derivation using correctly escaped LaTeX.
+6. yearId must always be an empty string "".
+7. Return ONLY the raw JSON array — no markdown, no code blocks, no preamble, no trailing text.
 
 ### EXAMPLE OUTPUT:
 [
   {
     "number": 1,
-    "question": "Evaluate the integral $$\\int_{1}^{2} \\\\frac{1}{x} dx$$",
+    "question": "Evaluate the integral $$\\\\int_{1}^{2} \\\\frac{1}{x} dx$$",
     "options": ["ln 2", "ln 3", "1", "0"],
     "imageType": "none",
     "correctOption": "0",
-    "explanation": "The integral of $$\\frac{1}{x}$$ is $$\\ln|x|$$. Evaluating from 1 to 2 gives $$\\ln 2 - \\ln 1 = \\ln 2 - 0 = \\ln 2$$.",
+    "explanation": "The integral of $\\\\frac{1}{x}$ is $\\\\ln|x|$. Evaluating from 1 to 2: $$\\\\ln 2 - \\\\ln 1 = \\\\ln 2 - 0 = \\\\ln 2$$.",
+    "yearId": ""
+  },
+  {
+    "number": 2,
+    "question": "If $\\\\log_{x} y = 2$ and $xy = 125$, find $x$ and $y$.",
+    "options": ["3 and 9", "9 and 3", "5 and 25", "25 and 5"],
+    "imageType": "none",
+    "correctOption": "2",
+    "explanation": "$\\\\log_x y = 2 \\\\Rightarrow y = x^2$. Substituting into $xy = 125$ gives $x \\\\cdot x^2 = x^3 = 125$, so $x = 5$ and $y = 5^2 = 25$.",
+    "yearId": ""
+  },
+  {
+    "number": 3,
+    "question": null,
+    "options": ["Option A", "Option B", "Option C", "Option D"],
+    "imageType": "question_image",
+    "correctOption": "1",
+    "explanation": "Based on the diagram shown, the correct answer is B because...",
     "yearId": ""
   }
 ]`,

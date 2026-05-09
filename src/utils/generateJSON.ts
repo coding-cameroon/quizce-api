@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
 import { logger } from "@/logger/logger.js";
 import { GEMINI_API_KEY } from "@/config/env.js";
 import { InternalError } from "@/errors/AppError.js";
@@ -11,7 +11,14 @@ export const generateJSON = async function (file: {
 }) {
   logger.info("GENERATE PDF STARTED...");
 
-  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+  // Use the latest model version for best reasoning and JSON adherence
+  const model = genAI.getGenerativeModel({
+    model: "gemini-2.0-flash",
+    // Force the model to output valid JSON structure
+    generationConfig: {
+      responseMimeType: "application/json",
+    },
+  });
 
   const base64Data = file.buffer.toString("base64");
 
@@ -23,79 +30,53 @@ export const generateJSON = async function (file: {
       },
     },
     {
-      text: `Act as a document data extractor. I will provide a PDF containing exam questions. Your task is to parse every question and return a valid JSON array.
+      text: `Act as a high-precision document data extractor for Cameroonian GCE exams. Your goal is to parse every question from the provided PDF and return a strictly valid JSON array.
+
+### EXTRACTION GOAL:
+1. Extract ONLY the first 50 Multiple Choice Questions (MCQs). 
+2. If a question is missing or contains only a diagram, use "question": null and "imageType": "question_image".
+3. Provide step-by-step mathematical reasoning in the "explanation" field.
+
+### STRICT JSON ESCAPING PROTOCOL:
+You are generating a RAW JSON STRING. In JSON, the backslash (\) is an escape character. 
+- To produce a LaTeX command like \\frac, you MUST write it as \\\\frac in the JSON.
+- For a LaTeX newline (\\\\), you MUST write it as \\\\\\\\ in the JSON.
+- FAILURE TO DOUBLE-ESCAPE BACKSLASHES WILL BREAK THE PARSER.
 
 ### DATA SCHEMA:
-Each object in the array must strictly follow this structure:
+Return an array of objects:
 {
   "number": number,
   "question": string | null,
   "options": string[],
   "imageType": "none" | "question_image",
-  "correctOption": string,
+  "correctOption": string (0-3),
   "explanation": string,
   "yearId": ""
 }
 
-### MATHEMATICAL RENDERING (LaTeX):
-1. Use LaTeX for ALL mathematical expressions, symbols, and equations.
-2. CRITICAL JSON ESCAPING RULE: In a JSON string, a single backslash must be written as two backslashes. So LaTeX command \\frac must be written as \\\\frac in the JSON output. This is standard JSON escaping.
-3. Inline math: wrap in single dollar signs e.g. $x^2 + 1$.
-4. Block math: wrap in double dollar signs e.g. $$\\\\frac{-b \\\\pm \\\\sqrt{b^2 - 4ac}}{2a}$$.
-5. Correct examples (as they must appear in the raw JSON string):
-   - Fraction: "$$\\\\frac{1}{x}$$"
-   - Square root: "$\\\\sqrt{x}$"
-   - Integral: "$$\\\\int_{1}^{2} \\\\frac{1}{x} dx$$"
-   - Log: "$\\\\log_{x} y$"
-   - Greek: "$\\\\alpha$", "$\\\\beta$", "$\\\\theta$", "$\\\\pi$", "$\\\\lambda$", "$\\\\mu$"
-   - Trig: "$\\\\sin \\\\theta$", "$\\\\cos \\\\theta$", "$\\\\tan \\\\theta$"
-   - Sets: "$A \\\\cap B$", "$A \\\\cup B$", "$\\\\mathbb{R}$"
-   - Arrows: "$\\\\rightarrow$", "$\\\\Rightarrow$", "$\\\\to$", "$\\\\infty$"
-   - Vectors: "$\\\\mathbf{i}$", "$\\\\mathbf{j}$", "$\\\\mathbf{k}$"
-   - Matrix row separator: use \\\\\\\\ (four backslashes in JSON = two backslashes = LaTeX newline)
-   - Matrix: "$$\\\\begin{pmatrix} a & b \\\\\\\\ c & d \\\\end{pmatrix}$$"
-   - Limit: "$\\\\lim_{x \\\\to 0}$"
-   - Sum: "$\\\\sum_{i=1}^{n}$"
-   - Absolute value: "$\\\\left| x \\\\right|$"
-   - Power/superscript: "$x^{2}$", "$e^{x}$"
-   - Subscript: "$x_{1}$", "$a_{n}$"
+### LaTeX RENDERING RULES:
+- Inline: $x^2$ (written as "$x^{2}$" in JSON)
+- Block: $$\\\\frac{a}{b}$$ (written as "$$\\\\\\\\frac{a}{b}$$" in JSON)
+- Greek/Symbols: \\\\alpha, \\\\beta, \\\\lambda, \\\\mu, \\\\theta, \\\\pi, \\\\Sigma, \\\\infty, \\\\rightarrow, \\\\Rightarrow
+- Vectors: \\\\mathbf{i}, \\\\mathbf{j}, \\\\mathbf{k}
+- Sets: \\\\mathbb{R}, \\\\cap, \\\\cup, \\\\setminus
 
-### EXTRACTION RULES:
-1. Extract ONLY the first 50 multiple-choice questions. Ignore structural/essay questions entirely.
-2. Options must always be plain text strings. Remove any "A.", "B.", "C.", or "D." prefixes. Apply the same JSON escaping rules if options contain LaTeX.
-3. correctOption is the zero-based index of the correct answer as a string ("0" for A, "1" for B, "2" for C, "3" for D). If not determinable, use "".
-4. imageType is ONLY "none" or "question_image". Use "question_image" if the question references a diagram, figure, table or graph.
-5. explanation must be detailed with full step-by-step working. For math problems show the full derivation with correctly escaped LaTeX.
-6. yearId must always be an empty string "".
-7. Return ONLY the raw JSON array — no markdown, no code blocks, no preamble, no trailing text.
+### QUALITY CHECK:
+- Remove "A.", "B.", "C.", "D." prefixes from options.
+- The "correctOption" must be a string representing the index ("0" for A, "1" for B, etc.).
+- Ensure no trailing commas in the JSON array.
+- Take your time to ensure the mathematical derivations in the "explanation" are 100% accurate.
 
-### EXAMPLE OUTPUT (showing exact raw JSON with correct escaping):
+### EXAMPLE OF CORRECTLY ESCAPED JSON:
 [
   {
     "number": 1,
-    "question": "Evaluate the integral $$\\\\int_{1}^{2} \\\\frac{1}{x} dx$$",
-    "options": ["ln 2", "ln 3", "1", "0"],
+    "question": "Find $g \\\\\\\\circ f(2)$ if $f(x) = x^{2}-1$ and $g(x) = 2x+1$.",
+    "options": ["11", "7", "24", "13"],
     "imageType": "none",
-    "correctOption": "0",
-    "explanation": "The integral of $\\\\frac{1}{x}$ is $\\\\ln|x|$. Evaluating from 1 to 2: $$\\\\ln 2 - \\\\ln 1 = \\\\ln 2 - 0 = \\\\ln 2$$.",
-    "yearId": ""
-  },
-  {
-    "number": 2,
-    "question": "If $\\\\log_{x} y = 2$ and $xy = 125$, find $x$ and $y$.",
-    "options": ["3 and 9", "9 and 3", "5 and 25", "25 and 5"],
-    "imageType": "none",
-    "correctOption": "2",
-    "explanation": "$\\\\log_x y = 2 \\\\Rightarrow y = x^2$. Substituting into $xy = 125$: $x \\\\cdot x^2 = x^3 = 125$, so $x = 5$ and $y = 5^2 = 25$.",
-    "yearId": ""
-  },
-  {
-    "number": 3,
-    "question": null,
-    "options": ["Option A", "Option B", "Option C", "Option D"],
-    "imageType": "question_image",
     "correctOption": "1",
-    "explanation": "Based on the diagram shown, the correct answer is B because...",
+    "explanation": "First, calculate $f(2) = 2^{2}-1 = 3$. Then $g(3) = 2(3)+1 = 7$.",
     "yearId": ""
   }
 ]`,
@@ -107,19 +88,23 @@ Each object in the array must strictly follow this structure:
   const text = result.response.text();
   if (!text) throw new InternalError("Empty response from Gemini");
 
-  // Strip markdown code blocks if present
+  // Since we used responseMimeType: "application/json",
+  // we usually don't need to strip markdown, but we do it for safety.
   const clean = text.replace(/```json\n?|\n?```/g, "").trim();
 
   try {
     return JSON.parse(clean);
-  } catch {
-    // Gemini sometimes outputs single backslashes which are invalid JSON
-    // Fix by doubling all backslashes then parse again
+  } catch (e) {
+    logger.error("Initial JSON parse failed, attempting backslash recovery...");
     try {
-      const fixed = clean.replace(/\\(?!\\)/g, "\\\\");
+      // Regex to fix single backslashes that aren't already escaped
+      const fixed = clean.replace(/\\(?!["\\/bfnrtu])/g, "\\\\");
       return JSON.parse(fixed);
-    } catch {
-      throw new InternalError("Failed to parse Gemini response as JSON");
+    } catch (finalError) {
+      logger.error("Final JSON Parse Error:", clean);
+      throw new InternalError(
+        "Failed to parse Gemini response as JSON even after recovery.",
+      );
     }
   }
 };
